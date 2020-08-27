@@ -16,7 +16,7 @@ namespace SuperStudentDiscountApiTests
         {
             #region Define Inputs
             InputDefinition state = new InputDefinition("State", "OH", new object[] { "OH", "AZ", "CO" });
-            InputDefinition age = new InputDefinition("DriverAge", 29, new object[] { 29, 30, 31 });
+            InputDefinition age = new InputDefinition("DriverAge", 16, new object[] { 16, 17, 18, 19, 29, 30, 31 });
             InputDefinition gpa = new InputDefinition("DriverGPA", 3.50, new object[] { 3.50, 3.49, 3.51, 3.79, 3.80, 3.81, 4.0 });
             InputDefinition studentStatus = new InputDefinition("StudentStatus", "College-enrolled", new object[] { "College-enrolled", "HighSchool-graduated", "None" });
             InputDefinition maritialStatus = new InputDefinition("MaritalStatus", "Single", new object[] { "Single", "Married", "Divorced", "Separated" });
@@ -31,9 +31,7 @@ namespace SuperStudentDiscountApiTests
             var testCases = testComboGen.GenerateNfatTestCases<SuperStudentDiscountApiTestCase>(1);
             #endregion
 
-            #region Setup Oracle and Results Logging
-            //Instantiate oracle class
-            SuperStudentDiscountOracle myOracle = new SuperStudentDiscountOracle();
+            #region Setup Results Logging
             bool hasFailures = false;
 
             //Used to log results
@@ -44,11 +42,12 @@ namespace SuperStudentDiscountApiTests
             #region Execute Test Cases and Log Results
             foreach (SuperStudentDiscountApiTestCase tc in testCases)
             {
+                SuperStudentDiscountOracle myOracle = new SuperStudentDiscountOracle(tc);
                 #region Get Expected Results From Oracle and Get Actual Results From SUT
                 var responseMessage = await TestCaseToHttpConverter.ConvertTestCaseToHttpPOST<SuperStudentDiscountApiTestCase>("http://54.210.38.124/service/superstudentdiscount", tc);
                 SuperStudentDiscountResult discountResult = JsonConvert.DeserializeObject<SuperStudentDiscountResult>(await responseMessage.Content.ReadAsStringAsync());
                 bool qualifiesForDiscountActual = discountResult.DiscountGranted;
-                bool qualifiesForDiscountExpected = myOracle.QualifiesForDiscount(tc);
+                bool qualifiesForDiscountExpected = await myOracle.QualifiesForDiscountAsync();
                 #endregion
 
                 #region Compare Expected VS Actual and Log Result Differences
@@ -79,9 +78,7 @@ namespace SuperStudentDiscountApiTests
             var testCases = testComboGen.GenerateNfatTestCases<SuperStudentDiscountApiTestCase>(1);
             #endregion
 
-            #region Setup Oracle and Results Logging
-            //Instantiate oracle class
-            SuperStudentDiscountOracle myOracle = new SuperStudentDiscountOracle();
+            #region Setup Results Logging
             bool hasFailures = false;
 
             //Used to log results
@@ -93,10 +90,11 @@ namespace SuperStudentDiscountApiTests
             foreach (SuperStudentDiscountApiTestCase tc in testCases)
             {
                 #region Get Expected Results From Oracle and Get Actual Results From SUT
+                SuperStudentDiscountOracle myOracle = new SuperStudentDiscountOracle(tc);
                 var responseMessage = await TestCaseToHttpConverter.ConvertTestCaseToHttpPOST<SuperStudentDiscountApiTestCase>("http://54.210.38.124/service/superstudentdiscount", tc);
                 SuperStudentDiscountResult discountResult = JsonConvert.DeserializeObject<SuperStudentDiscountResult>(await responseMessage.Content.ReadAsStringAsync());
                 double discountAmountActual = discountResult.DiscountAmount;
-                double discountAmountExpected = myOracle.DiscountAmount(tc);
+                double discountAmountExpected = await myOracle.DiscountAmountAsync();
                 #endregion
 
                 #region Compare Expected VS Actual and Log Result Differences

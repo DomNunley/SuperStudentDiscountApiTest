@@ -15,6 +15,7 @@ namespace TestRunnerApi.Services
         {
             var testMethods = testClassType.GetMethods();
             List<TestRun> runs = new List<TestRun>();
+            bool allTestRunsPass = true;
 
             foreach(MethodInfo methodInfo in testMethods)
             {
@@ -34,6 +35,7 @@ namespace TestRunnerApi.Services
                     catch(Exception e)
                     {
                         testRun.HasPassed = false;
+                        allTestRunsPass = false;
                         testRun.Message = e.Message;
                     }
                     finally
@@ -43,7 +45,7 @@ namespace TestRunnerApi.Services
                 }
             }
 
-            return new TestRunResults { TestRuns = runs };
+            return new TestRunResults { TestRuns = runs, HasAllTestRunsPass = allTestRunsPass };
         }
     }
 }

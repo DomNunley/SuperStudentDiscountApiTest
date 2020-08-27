@@ -1,15 +1,34 @@
-﻿namespace SuperStudentDiscountApiTests
+﻿using Newtonsoft.Json;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+
+namespace SuperStudentDiscountApiTests
 {
     public class SuperStudentDiscountOracle
     {
-        public bool QualifiesForDiscount(SuperStudentDiscountApiTestCase testCase)
+        private static HttpClient _httpClient = new HttpClient();
+        private readonly SuperStudentDiscountApiTestCase _testCase;
+
+        public SuperStudentDiscountOracle(SuperStudentDiscountApiTestCase testCase)
         {
-            if(testCase.DriverAge < 30 && 
-                testCase.DriverGPA >= 3.5 && 
-                (testCase.MaritalStatus == "Single" || testCase.MaritalStatus == "Divorced") && 
-                testCase.Relationship == "Child" &&
-                testCase.StudentStatus.ToLower().Contains("enrolled") && 
-                testCase.Violations.Count == 0)
+            _testCase = testCase;
+            _httpClient.DefaultRequestHeaders
+                        .Accept
+                        .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        }
+
+        public async Task<bool> QualifiesForDiscountAsync()
+        {
+            var bizData = await GetBizDataFromDB();
+
+            if(_testCase.DriverAge < bizData.DriverAge &&
+                _testCase.DriverGPA >= bizData.DriverEligibleGPA && 
+                (_testCase.MaritalStatus == "Single" || _testCase.MaritalStatus == "Divorced") &&
+                _testCase.Relationship == "Child" &&
+                _testCase.StudentStatus.ToLower().Contains("enrolled") &&
+                _testCase.Violations.Count == 0)
             {
                 return true;
             }
@@ -17,20 +36,46 @@
             return false;
         }
 
-        public double DiscountAmount(SuperStudentDiscountApiTestCase testCase)
+        public async Task<double> DiscountAmountAsync()
         {
-            if(QualifiesForDiscount(testCase) && testCase.DriverGPA >= 3.8)
+            var bizData = await GetBizDataFromDB();
+
+            if (await QualifiesForDiscountAsync() && _testCase.DriverGPA >= bizData.DriverHighGPA)
             {
-                return 40.00;
+                return bizData.DiscountHighAmount;
             }
-            else if(QualifiesForDiscount(testCase) && testCase.DriverGPA >= 3.5)
+            else if (await QualifiesForDiscountAsync() && _testCase.DriverGPA >= bizData.DriverMediumGPA)
             {
-                return 20.00;
+                return bizData.DiscountMediumAmount;
             }
             else
             {
                 return 0;
             }
+        }
+
+        private async Task<SuperStudentParmsDTO> GetBizDataFromDB()
+        {
+            var httpResponse = await _httpClient.GetAsync(@"http://54.210.38.124/service/api/superstudentparmsdiscount/" + _testCase.State);
+            return JsonConvert.DeserializeObject<SuperStudentParmsDTO>(await httpResponse.Content.ReadAsStringAsync());
+        }
+
+        private class SuperStudentParmsDTO
+        {
+            [JsonPropertyName("state")]
+            public string State { get; set; }
+            [JsonPropertyName("driverage")]
+            public int DriverAge { get; set; }
+            [JsonPropertyName("drivereligiblegpa")]
+            public double DriverEligibleGPA { get; set; }
+            [JsonPropertyName("drivermediumgpa")]
+            public double DriverMediumGPA { get; set; }
+            [JsonPropertyName("driverhighgpa")]
+            public double DriverHighGPA { get; set; }
+            [JsonPropertyName("discountmediumamount")]
+            public double DiscountMediumAmount { get; set; }
+            [JsonPropertyName("discounthighamount")]
+            public double DiscountHighAmount { get; set; }
         }
     }
 }
