@@ -6,6 +6,8 @@ using TestCaseGenerator;
 using Xunit;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Linq;
+using Microsoft.VisualStudio.TestPlatform.Common.Interfaces;
 
 namespace SuperStudentDiscountApiTests
 {
@@ -28,23 +30,17 @@ namespace SuperStudentDiscountApiTests
             #region Setup Combination Generator and Generate Test Cases
             //Pass inputs to combination generator and select technique
             TestComboGen testComboGen = new TestComboGen(inputs);
-            var testCases = testComboGen.GenerateNfatTestCases<SuperStudentDiscountApiTestCase>(1);
+            var testCases = testComboGen.GenerateNfatTestCases<SuperStudentDiscountApiTestCase>(1).ToList();
             #endregion
 
-            #region Setup Results Logging
             bool hasFailures = false;
 
-            //Used to log results
-            StringBuilder results = new StringBuilder();
-            StringResultsWriter.AddHeaders<SuperStudentDiscountApiTestCase>(results);
-            #endregion
-
             #region Execute Test Cases and Log Results
-            foreach (SuperStudentDiscountApiTestCase tc in testCases)
+            for(int i = 0; i < testCases.Count(); i++)
             {
-                SuperStudentDiscountOracle myOracle = new SuperStudentDiscountOracle(tc);
                 #region Get Expected Results From Oracle and Get Actual Results From SUT
-                var responseMessage = await TestCaseToHttpConverter.ConvertTestCaseToHttpPOST<SuperStudentDiscountApiTestCase>("http://54.210.38.124/service/superstudentdiscount", tc);
+                SuperStudentDiscountOracle myOracle = new SuperStudentDiscountOracle(testCases[i]);
+                var responseMessage = await TestCaseToHttpConverter.ConvertTestCaseToHttpPOST<SuperStudentDiscountApiTestCase>("http://54.210.38.124/service/superstudentdiscount", testCases[i]);
                 SuperStudentDiscountResult discountResult = JsonConvert.DeserializeObject<SuperStudentDiscountResult>(await responseMessage.Content.ReadAsStringAsync());
                 bool qualifiesForDiscountActual = discountResult.DiscountGranted;
                 bool qualifiesForDiscountExpected = await myOracle.QualifiesForDiscountAsync();
@@ -53,15 +49,17 @@ namespace SuperStudentDiscountApiTests
                 #region Compare Expected VS Actual and Log Result Differences
                 if (!qualifiesForDiscountExpected.Equals(qualifiesForDiscountActual))
                 {
-                    StringResultsWriter.AddRow<SuperStudentDiscountApiTestCase>(tc, results); //log failures only
-                    results.Append($"OUTPUT: Expected <{qualifiesForDiscountExpected}> but was <{qualifiesForDiscountActual}>");
+                    testCases[i].ResultMessage = $"Expected <{qualifiesForDiscountExpected}> but was <{qualifiesForDiscountActual}>";
                     hasFailures = true;
                 }
                 #endregion
             }
+
+            var failedTests = testCases.Where(x => x.ResultMessage != null);
+            string jsonTestCases = JsonConvert.SerializeObject(failedTests);
             #endregion
 
-            Assert.True(!hasFailures, results.ToString());
+            Assert.True(!hasFailures, hasFailures ? jsonTestCases : "");
         }
 
         [Fact]
@@ -75,23 +73,17 @@ namespace SuperStudentDiscountApiTests
             #region Setup Combination Generator and Generate Test Cases
             //Pass inputs to combination generator and select technique
             TestComboGen testComboGen = new TestComboGen(inputs);
-            var testCases = testComboGen.GenerateNfatTestCases<SuperStudentDiscountApiTestCase>(1);
+            var testCases = testComboGen.GenerateNfatTestCases<SuperStudentDiscountApiTestCase>(1).ToList();
             #endregion
 
-            #region Setup Results Logging
             bool hasFailures = false;
 
-            //Used to log results
-            StringBuilder results = new StringBuilder();
-            StringResultsWriter.AddHeaders<SuperStudentDiscountApiTestCase>(results);
-            #endregion
-
             #region Execute Test Cases and Log Results
-            foreach (SuperStudentDiscountApiTestCase tc in testCases)
+            for(int i = 0; i < testCases.Count; i++)
             {
                 #region Get Expected Results From Oracle and Get Actual Results From SUT
-                SuperStudentDiscountOracle myOracle = new SuperStudentDiscountOracle(tc);
-                var responseMessage = await TestCaseToHttpConverter.ConvertTestCaseToHttpPOST<SuperStudentDiscountApiTestCase>("http://54.210.38.124/service/superstudentdiscount", tc);
+                SuperStudentDiscountOracle myOracle = new SuperStudentDiscountOracle(testCases[i]);
+                var responseMessage = await TestCaseToHttpConverter.ConvertTestCaseToHttpPOST<SuperStudentDiscountApiTestCase>("http://54.210.38.124/service/superstudentdiscount", testCases[i]);
                 SuperStudentDiscountResult discountResult = JsonConvert.DeserializeObject<SuperStudentDiscountResult>(await responseMessage.Content.ReadAsStringAsync());
                 double discountAmountActual = discountResult.DiscountAmount;
                 double discountAmountExpected = await myOracle.DiscountAmountAsync();
@@ -100,15 +92,17 @@ namespace SuperStudentDiscountApiTests
                 #region Compare Expected VS Actual and Log Result Differences
                 if (!discountAmountExpected.Equals(discountAmountActual))
                 {
-                    StringResultsWriter.AddRow<SuperStudentDiscountApiTestCase>(tc, results); //log failures only
-                    results.Append($"OUTPUT: Expected <{discountAmountExpected}> but was <{discountAmountActual}>");
+                    testCases[i].ResultMessage = $"Expected <{discountAmountExpected}> but was <{discountAmountActual}>";
                     hasFailures = true;
                 }
                 #endregion
             }
+
+            var failedTests = testCases.Where(x => x.ResultMessage != null);
+            string jsonTestCases = JsonConvert.SerializeObject(failedTests);
             #endregion
 
-            Assert.True(!hasFailures, results.ToString());
+            Assert.True(!hasFailures, hasFailures ? jsonTestCases : "");
 }
     }
 
@@ -128,6 +122,7 @@ namespace SuperStudentDiscountApiTests
         public List<string> Violations { get; set; } = new List<string> { };
         public double DriverGPA { get; set; } = 3.5;
         public string MaritalStatus { get; set; } = "Single";
+        public string ResultMessage { get; set; }
 
         public SuperStudentDiscountApiTestCase() { }
 
