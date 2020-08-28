@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BusinessSelfServiceApiTests\BusinessSelfServiceApiTests.csproj" />
     <ProjectReference Include="..\SuperStudentDiscountApiTests\SuperStudentDiscountApiTests.csproj" />
   </ItemGroup>
 

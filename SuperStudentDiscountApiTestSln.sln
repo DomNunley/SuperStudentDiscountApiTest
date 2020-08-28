@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestRunnerApi", "TestRunnerApi\TestRunnerApi.csproj", "{18237C6A-CA4C-4A1F-BB4D-4DC8911AE268}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestRunnerApi", "TestRunnerApi\TestRunnerApi.csproj", "{18237C6A-CA4C-4A1F-BB4D-4DC8911AE268}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperStudentDiscountApiTests", "SuperStudentDiscountApiTests\SuperStudentDiscountApiTests.csproj", "{EC632996-995A-4819-91C1-DE9FAA4BB570}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperStudentDiscountApiTests", "SuperStudentDiscountApiTests\SuperStudentDiscountApiTests.csproj", "{EC632996-995A-4819-91C1-DE9FAA4BB570}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestCaseGenerator", "TestCaseGenerator\TestCaseGenerator.csproj", "{E20252F9-DDD5-4696-9BC7-AB6FDC4F697A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCaseGenerator", "TestCaseGenerator\TestCaseGenerator.csproj", "{E20252F9-DDD5-4696-9BC7-AB6FDC4F697A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestCaseGeneratorUnitTests", "TestCaseGeneratorUnitTests\TestCaseGeneratorUnitTests.csproj", "{32BFD108-F354-4535-A259-A0926286C29A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCaseGeneratorUnitTests", "TestCaseGeneratorUnitTests\TestCaseGeneratorUnitTests.csproj", "{32BFD108-F354-4535-A259-A0926286C29A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessSelfServiceApiTests", "BusinessSelfServiceApiTests\BusinessSelfServiceApiTests.csproj", "{68F775F3-6A4A-4EEE-A84F-65CC78F78E2C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{32BFD108-F354-4535-A259-A0926286C29A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32BFD108-F354-4535-A259-A0926286C29A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32BFD108-F354-4535-A259-A0926286C29A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68F775F3-6A4A-4EEE-A84F-65CC78F78E2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68F775F3-6A4A-4EEE-A84F-65CC78F78E2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68F775F3-6A4A-4EEE-A84F-65CC78F78E2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68F775F3-6A4A-4EEE-A84F-65CC78F78E2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

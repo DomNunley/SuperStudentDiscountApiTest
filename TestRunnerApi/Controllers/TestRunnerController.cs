@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Xunit;
 using SuperStudentDiscountApiTests;
-using TestRunnerApi.Models;
+using BusinessSelfServiceApiTests;
 using TestRunnerApi.Services;
 
 namespace TestRunnerApi.Controllers
@@ -15,10 +10,19 @@ namespace TestRunnerApi.Controllers
     public class TestRunnerController : ControllerBase
     {
         [HttpGet]
-        [Route("superstudentdiscounttestrunner")]
-        public async Task<TestRunResults<SuperStudentDiscountApiTestCase>> GetAsync()
+        [Route("api/superstudentdiscounttestrunner")]
+        public async Task<ActionResult> GetDiscountResultsAsync()
         {
-            return await TestExecutor.ExecuteTests<SuperStudentDiscountApiTestCase>(typeof(SuperStudentDiscountApiComboTests));
+            var testRunResults = await TestExecutor.ComboExecuteTests<SuperStudentDiscountApiTestCase>(typeof(SuperStudentDiscountApiComboTests));
+            return Ok(testRunResults);
+        }
+
+        [HttpGet]
+        [Route("api/bizintegrationtestrunner")]
+        public async Task<ActionResult> GetIntegrationResultsAsync()
+        {
+            var testRunResults = await TestExecutor.ExecuteTests(typeof(BSSApiIntegrationTests));
+            return Ok(testRunResults);
         }
     }
 }
