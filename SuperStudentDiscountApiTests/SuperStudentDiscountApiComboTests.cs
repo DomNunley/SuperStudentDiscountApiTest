@@ -43,7 +43,7 @@ namespace SuperStudentDiscountApiTests
             {
                 #region Get Expected Results From Oracle and Get Actual Results From SUT
                 SuperStudentDiscountOracle myOracle = new SuperStudentDiscountOracle(testCases[i]);
-                var responseMessage = await TestCaseToHttpConverter.ConvertTestCaseToHttpPOST<SuperStudentDiscountApiTestCase>("http://54.210.38.124/service/superstudentdiscount", testCases[i]);
+                var responseMessage = await TestCaseToHttpConverter.ConvertTestCaseToHttpPOST<SuperStudentDiscountApiTestCase>("http://54.210.38.124/service/api/superstudentdiscount", testCases[i]);
                 SuperStudentDiscountResult discountResult = JsonConvert.DeserializeObject<SuperStudentDiscountResult>(await responseMessage.Content.ReadAsStringAsync());
                 bool qualifiesForDiscountActual = discountResult.DiscountGranted;
                 bool qualifiesForDiscountExpected = await myOracle.QualifiesForDiscountAsync();
@@ -86,7 +86,7 @@ namespace SuperStudentDiscountApiTests
             {
                 #region Get Expected Results From Oracle and Get Actual Results From SUT
                 SuperStudentDiscountOracle myOracle = new SuperStudentDiscountOracle(testCases[i]);
-                var responseMessage = await TestCaseToHttpConverter.ConvertTestCaseToHttpPOST<SuperStudentDiscountApiTestCase>("http://54.210.38.124/service/superstudentdiscount", testCases[i]);
+                var responseMessage = await TestCaseToHttpConverter.ConvertTestCaseToHttpPOST<SuperStudentDiscountApiTestCase>("http://54.210.38.124/service/api/superstudentdiscount", testCases[i]);
                 SuperStudentDiscountResult discountResult = JsonConvert.DeserializeObject<SuperStudentDiscountResult>(await responseMessage.Content.ReadAsStringAsync());
                 double discountAmountActual = discountResult.DiscountAmount;
                 double discountAmountExpected = await myOracle.DiscountAmountAsync();
