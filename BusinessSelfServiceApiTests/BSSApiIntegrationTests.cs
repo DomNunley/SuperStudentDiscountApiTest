@@ -1,11 +1,9 @@
-using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Xunit;
 using System.Net;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 

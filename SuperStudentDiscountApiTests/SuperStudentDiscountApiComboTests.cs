@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using TestCaseGenerator;
 using Xunit;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Linq;
-using Microsoft.VisualStudio.TestPlatform.Common.Interfaces;
 
 namespace SuperStudentDiscountApiTests
 {
@@ -62,7 +60,7 @@ namespace SuperStudentDiscountApiTests
             _failedTestCases = failedTestCases;
             #endregion
 
-            Assert.True(!hasFailures);
+            Assert.True(!hasFailures, JsonConvert.SerializeObject(_failedTestCases));
         }
 
         [Fact]
@@ -105,7 +103,7 @@ namespace SuperStudentDiscountApiTests
             _failedTestCases = failedTestCases;
             #endregion
 
-            Assert.True(!hasFailures);
+            Assert.True(!hasFailures, JsonConvert.SerializeObject(_failedTestCases));
         }
     }
 
