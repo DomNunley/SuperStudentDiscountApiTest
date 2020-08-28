@@ -11,8 +11,11 @@ using Microsoft.VisualStudio.TestPlatform.Common.Interfaces;
 
 namespace SuperStudentDiscountApiTests
 {
-    public class SuperStudentDiscountApiComboTests
+    public class SuperStudentDiscountApiComboTests : ITestClass
     {
+        public IEnumerable<ITestCase> FailedTestCases { get => _failedTestCases; }
+        private IEnumerable<SuperStudentDiscountApiTestCase> _failedTestCases;
+
         [Fact]
         public async Task SuperStudentQualifiesForDiscountAsync()
         {
@@ -55,11 +58,11 @@ namespace SuperStudentDiscountApiTests
                 #endregion
             }
 
-            var failedTests = testCases.Where(x => x.ResultMessage != null);
-            string jsonTestCases = JsonConvert.SerializeObject(failedTests);
+            var failedTestCases = testCases.Where(x => x.ResultMessage != null);
+            _failedTestCases = failedTestCases;
             #endregion
 
-            Assert.True(!hasFailures, hasFailures ? jsonTestCases : "");
+            Assert.True(!hasFailures);
         }
 
         [Fact]
@@ -98,12 +101,12 @@ namespace SuperStudentDiscountApiTests
                 #endregion
             }
 
-            var failedTests = testCases.Where(x => x.ResultMessage != null);
-            string jsonTestCases = JsonConvert.SerializeObject(failedTests);
+            var failedTestCases = testCases.Where(x => x.ResultMessage != null);
+            _failedTestCases = failedTestCases;
             #endregion
 
-            Assert.True(!hasFailures, hasFailures ? jsonTestCases : "");
-}
+            Assert.True(!hasFailures);
+        }
     }
 
     public class SuperStudentDiscountResult

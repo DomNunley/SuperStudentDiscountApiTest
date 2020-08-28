@@ -16,9 +16,9 @@ namespace TestRunnerApi.Controllers
     {
         [HttpGet]
         [Route("superstudentdiscounttestrunner")]
-        public async Task<TestRunResults> GetAsync()
+        public async Task<TestRunResults<SuperStudentDiscountApiTestCase>> GetAsync()
         {
-            return await TestExecutor.ExecuteTests(typeof(SuperStudentDiscountApiComboTests));
+            return await TestExecutor.ExecuteTests<SuperStudentDiscountApiTestCase>(typeof(SuperStudentDiscountApiComboTests));
         }
     }
 }
