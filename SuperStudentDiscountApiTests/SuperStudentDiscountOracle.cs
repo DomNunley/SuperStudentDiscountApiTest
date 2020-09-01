@@ -56,7 +56,7 @@ namespace SuperStudentDiscountApiTests
 
         private async Task<SuperStudentParmsDTO> GetBizDataFromDB()
         {
-            var httpResponse = await _httpClient.GetAsync(@"http://54.210.38.124/service/api/superstudentparmsdiscount/" + _testCase.State);
+            var httpResponse = await _httpClient.GetAsync(@"http://54.208.9.185/service/api/superstudentparmsdiscount/" + _testCase.State);
             return JsonConvert.DeserializeObject<SuperStudentParmsDTO>(await httpResponse.Content.ReadAsStringAsync());
         }
 

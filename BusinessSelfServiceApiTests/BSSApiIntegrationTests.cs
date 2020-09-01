@@ -23,14 +23,14 @@ namespace BusinessSelfServiceApiTests
         [Fact]
         public async Task HttpGetReturnsResponse200Async()
         {
-            var httpResponse = await _httpClient.GetAsync(@"http://54.210.38.124/service/api/superstudentparmsdiscount/OH");
+            var httpResponse = await _httpClient.GetAsync(@"http://54.208.9.185/service/api/superstudentparmsdiscount/OH");
             Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
         }
 
         [Fact]
         public async Task HttpGetReturnsCollectionAsync()
         {
-            var httpResponse = await _httpClient.GetAsync(@"http://54.210.38.124/service/api/superstudentparmsdiscount");
+            var httpResponse = await _httpClient.GetAsync(@"http://54.208.9.185/service/api/superstudentparmsdiscount");
             var businessData = JsonConvert.DeserializeObject<BusinessData>(await httpResponse.Content.ReadAsStringAsync());
             Assert.NotNull(businessData.Discounts);
         }
